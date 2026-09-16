@@ -1,5 +1,9 @@
 logs/
 /fastlane/metadata/android/en-US/changelogs/
+
+# pi coding agent session data
+.pi/
+
 /core/assets/mindustry-saves/
 /core/assets/mindustry-maps/
 /core/assets/bundles/output/
