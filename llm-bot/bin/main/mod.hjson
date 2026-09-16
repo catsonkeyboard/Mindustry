@@ -1,9 +1,0 @@
-name: llm-bot
-displayName: LLM Bot
-author: catsonkeyboard
-description: LLM-driven autonomous AI player. Configure at config/mods/llm-bot/config.json or via LLM_BOT_* env vars.
-version: 0.1.0
-minGameVersion: 136
-hidden: true
-java: true
-main: bot.LlmBotPlugin

@@ -1,0 +1,9 @@
+# Gradle build outputs
+build/
+bin/
+
+# Eclipse / jdtls metadata
+.classpath
+.project
+.settings/
+*.launch
