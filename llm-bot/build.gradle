@@ -1,0 +1,26 @@
+apply plugin: "java"
+
+sourceSets.main.java.srcDirs = ["src/"]
+sourceSets.main.resources.srcDirs = ["resources/"]
+
+dependencies{
+    //the plugin runs inside the game, so its runtime is provided by the host
+    compileOnly project(":core")
+}
+
+//build a standalone plugin jar containing only llm-bot classes
+tasks.register('pluginJar', Jar){
+    archiveFileName = "llm-bot.jar"
+    from sourceSets.main.output
+    destinationDirectory = layout.projectDirectory.dir("build/libs")
+}
+
+//build the plugin jar and copy it into the dev server's mods folder for quick testing
+tasks.register('deployServer', Copy){
+    dependsOn 'pluginJar'
+    from layout.projectDirectory.file("build/libs/llm-bot.jar")
+    into rootProject.file("core/assets/config/mods")
+    doLast{
+        println "Deployed llm-bot.jar -> core/assets/config/mods/ (run with: gradlew server:run)"
+    }
+}

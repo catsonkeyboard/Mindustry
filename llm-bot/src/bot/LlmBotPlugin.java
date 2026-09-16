@@ -15,7 +15,7 @@ import static mindustry.Vars.state;
 
 /**
  * Entry point of the LLM bot plugin.
- * Wiring: WorldLoadEvent -> resolve team + rescan ores + activate loop,
+ * Wiring: PlayEvent (fires after state=playing + world load) -> resolve team + rescan ores + activate loop,
  * WaveEvent -> flag urgent decision, ResetEvent -> deactivate.
  */
 public class LlmBotPlugin extends Plugin{
@@ -42,8 +42,9 @@ public class LlmBotPlugin extends Plugin{
         executor = new ActionExecutor(config);
         loop = new AgentLoop(config, new LlmClient(config), serializer, executor);
 
-        //world lifecycle
-        Events.on(EventType.WorldLoadEvent.class, e -> {
+        //game lifecycle: PlayEvent fires AFTER state.set(playing) + world load,
+        //unlike WorldLoadEvent which fires while state is still menu (and would bail on the isGame guard)
+        Events.on(EventType.PlayEvent.class, e -> {
             try{
                 if(!state.isGame()) return;
                 Team team = resolveTeam(config.team);
@@ -53,7 +54,7 @@ public class LlmBotPlugin extends Plugin{
                 loop.activate();
                 Log.info("@ activated for team '@' (core: @)", TAG, team.name, team.data().hasCore());
             }catch(Throwable t){
-                Log.err(TAG, "failed to activate on world load", t);
+                Log.err(TAG, "failed to activate on play", t);
             }
         });
 

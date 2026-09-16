@@ -540,33 +540,3 @@ if(System.getProperty("compileMethodParams") != null){
         options.compilerArgs << '-parameters'
     }
 }
-
-//LLM-driven AI player plugin module. Produces a standalone jar that can be dropped into the
-//game's mods/ folder (client) or server config/mods/ folder (headless).
-project(":llm-bot"){
-    apply plugin: "java"
-
-    sourceSets.main.java.srcDirs = ["src/"]
-    sourceSets.main.resources.srcDirs = ["resources/"]
-
-    dependencies{
-        //the plugin runs inside the game, so its runtime is provided by the host
-        compileOnly project(":core")
-    }
-
-    tasks.register('pluginJar', Jar){
-        archiveFileName = "llm-bot.jar"
-        from sourceSets.main.output
-        destinationDirectory = layout.projectDirectory.dir("build/libs")
-    }
-
-    //build the plugin jar and copy it into the dev server's mods folder for quick testing
-    tasks.register('deployServer', Copy){
-        dependsOn 'pluginJar'
-        from layout.projectDirectory.file("build/libs/llm-bot.jar")
-        into rootProject.file("core/assets/config/mods")
-        doLast{
-            println "Deployed llm-bot.jar -> core/assets/config/mods/ (run with: gradlew server:run)"
-        }
-    }
-}
