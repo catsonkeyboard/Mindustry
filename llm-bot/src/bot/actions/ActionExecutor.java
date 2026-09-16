@@ -15,6 +15,7 @@ import static mindustry.Vars.*;
 
 /**
  * Validates and executes LLM-issued actions on the main game thread.
+ * (Executed only on the main thread via Core.app.post from AgentLoop.)
  * Every action is treated as untrusted input: unknown blocks, out-of-bounds
  * coordinates, invalid placements and unaffordable costs are rejected with
  * a human-readable reason that is fed back into the next prompt.
